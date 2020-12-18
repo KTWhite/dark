@@ -11,7 +11,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//自增
     private Integer id;
+
+    @Column(name = "username")
     private String userName;
+
+    @Column(name = "passWord")
     private String passWord;
+
+    @Column(name = "phone")
     private String phone;
 }

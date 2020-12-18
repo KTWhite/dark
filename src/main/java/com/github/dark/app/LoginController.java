@@ -1,6 +1,7 @@
 package com.github.dark.app;
 
 import com.github.dark.biz.LoginBiz;
+import com.github.dark.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @Api("用户登录")
@@ -19,7 +21,7 @@ public class LoginController {
 
     @GetMapping("/SignIn")
     @ApiOperation("用户登录")
-    public String SignIn(){
+    public List<User> SignIn(){
         return loginBiz.signIn();
     }
 }

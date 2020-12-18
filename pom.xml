@@ -30,6 +30,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -84,24 +90,25 @@
             <artifactId>mapper-spring-boot-starter</artifactId>
             <version>1.1.2</version>
         </dependency>
+        <!--log4j2-->
+        <!-- log4j2. -->
+        <dependency> <!-- 引入log4j2依赖 -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
+        <!--整个resources为用xml写sql语句而加上的-->
         <resources>
             <resource>
                 <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>true</filtering>
             </resource>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>src/mian/resources</directory>
                 <includes>
-                    <include>**/*.*</include>
+                    <include>**/*.xml</include>
                 </includes>
-                <filtering>false</filtering>
             </resource>
         </resources>
         <plugins>
