@@ -99,16 +99,15 @@
     </dependencies>
 
     <build>
-        <!--整个resources为用xml写sql语句而加上的-->
         <resources>
             <resource>
                 <directory>src/main/java</directory>
-            </resource>
-            <resource>
-                <directory>src/mian/resources</directory>
                 <includes>
                     <include>**/*.xml</include>
                 </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
             </resource>
         </resources>
         <plugins>

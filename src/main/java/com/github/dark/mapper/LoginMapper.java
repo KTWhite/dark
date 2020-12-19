@@ -7,4 +7,5 @@ import java.util.List;
 @org.apache.ibatis.annotations.Mapper
 public interface LoginMapper extends Mapper<User> {
 
+    List<User> selectAlls();
 }
