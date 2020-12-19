@@ -32,3 +32,11 @@ logging:
   level:
     com.example: info
     cn.jay.repository: trace
+jwt:
+  header: Authorization
+  # 令牌前缀
+  bearer: Bearer
+  # 使用Base64对该令牌进行编码
+  base64-secret: XXXXXXXXXXXXXXXX(制定您的密钥)
+  # 令牌过期时间 此处单位/毫秒
+  token-validity-in-seconds: 43200000

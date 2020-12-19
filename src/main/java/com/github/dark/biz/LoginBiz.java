@@ -14,6 +14,6 @@ public class LoginBiz {
     private LoginMapper loginMapper;
 
     public List<User> signIn(){
-        return loginMapper.selectAlls();
+        return loginMapper.selectAll();
     }
 }
