@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Table(name = "user")
 @Data
-public class User {
+public class SysUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//自增
     private Integer id;
@@ -18,6 +18,5 @@ public class User {
     @Column(name = "passWord")
     private String passWord;
 
-    @Column(name = "phone")
-    private String phone;
+
 }

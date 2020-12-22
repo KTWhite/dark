@@ -1,7 +1,7 @@
 package com.github.dark.app;
 
 import com.github.dark.biz.LoginBiz;
-import com.github.dark.entity.User;
+import com.github.dark.entity.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class LoginController {
 
     @GetMapping("/SignIn")
     @ApiOperation("用户登录")
-    public List<User> SignIn(){
+    public List<SysUser> SignIn(){
         return loginBiz.signIn();
     }
 }

@@ -1,6 +1,5 @@
 package com.github.dark.config;
 
-import com.github.dark.mapper.LoginMapper;
 import com.github.dark.service.MyUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +24,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/auth/authenticate").permitAll()
+                .authorizeRequests().antMatchers("/auth/verityToken")
+                .permitAll()
                 .anyRequest().authenticated();
     }
 

@@ -1,7 +1,7 @@
 package com.github.dark.biz;
 
-import com.github.dark.entity.User;
-import com.github.dark.mapper.LoginMapper;
+import com.github.dark.entity.SysUser;
+import com.github.dark.mapper.SysUserMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -11,9 +11,9 @@ import java.util.List;
 public class LoginBiz {
 
     @Resource
-    private LoginMapper loginMapper;
+    private SysUserMapper sysUserMapper;
 
-    public List<User> signIn(){
-        return loginMapper.selectAll();
+    public List<SysUser> signIn(){
+        return sysUserMapper.selectAll();
     }
 }
