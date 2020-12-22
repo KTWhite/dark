@@ -140,14 +140,14 @@ public class JwtUtils {
     /**
      * 刷新令牌有效期
      *
-     * @param sysUser 登录信息
+     * @param loginUser 登录信息
      */
     public void refreshToken(LoginUser loginUser)
     {
-//        loginUser.setLoginTime(System.currentTimeMillis());
-//        loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
-//        // 根据uuid将loginUser缓存
-//        String userKey = getTokenKey(loginUser.getToken());
-//        redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
+        loginUser.setLoginTime(System.currentTimeMillis());
+        loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
+        // 根据uuid将loginUser缓存
+        String userKey = getTokenKey(loginUser.getToken());
+        redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
 }

@@ -1,5 +1,6 @@
 package com.github.dark.app;
 
+import com.github.dark.annotation.IgnoreToken;
 import com.github.dark.biz.LoginBiz;
 import com.github.dark.entity.SysUser;
 import com.github.dark.service.MyUserDetailsService;
@@ -56,6 +57,7 @@ public class AuthController {
         log.info(TAG,"用户信息："+userDetails);
        return ResponseEntity.ok(new AuthenticationResponse(token));
     }
+    @IgnoreToken
     @RequestMapping(value = "/verityToken",method = RequestMethod.POST)
     public ResponseEntity<?> verityAuthenticationToken(@RequestBody VerityToeknRequest verityToeknRequest){
         Boolean veritied = jwtUtils.validateToken(verityToeknRequest.getToken(), verityToeknRequest.getUsername());
