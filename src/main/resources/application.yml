@@ -14,6 +14,17 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create
+  redis:
+    database: 0
+    host: 120.77.149.78
+    port: 6379
+    password:
+    jedis:
+      pool:
+        max-active: 20
+        max-idle: 10
+        min-idle: 0
+    connect-timeout: 1000
 
 # MyBatis配置
 mybatis:
@@ -37,6 +48,6 @@ jwt:
   # 令牌前缀
   bearer: Bearer
   # 使用Base64对该令牌进行编码
-  base64-secret: XXXXXXXXXXXXXXXX(制定您的密钥)
-  # 令牌过期时间 此处单位/毫秒
-  token-validity-in-seconds: 43200000
+  secret: 3ce47fcc969a4cffa29e298d8f83134eabcdefghijklmn
+  expireTime: 300
+

@@ -4,6 +4,7 @@ package com.github.dark.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "user")
 @Data
