@@ -1,6 +1,7 @@
 package com.github.dark.config;
 
 import com.github.dark.service.MyUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.filter.CorsFilter;
 
 import javax.annotation.Resource;
 
@@ -18,6 +20,9 @@ import javax.annotation.Resource;
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Resource
     private MyUserDetailsService myUserDetailsService;
+
+    @Autowired
+    private CorsFilter corsFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -43,6 +48,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/authenticate")
                 .permitAll()
                 .anyRequest().authenticated();
+        http.addFilterBefore(corsFilter,AuthenticationTokenFilter.class);
     }
 
     @Override
