@@ -85,9 +85,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         //退出登录
         http.logout().logoutUrl("/logout").logoutSuccessHandler(jwtLogoutSuccessHandler);
-
         // 添加JWT filter
-//        http.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
