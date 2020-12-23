@@ -1,6 +1,8 @@
 package com.github.dark.config;
 
+import com.github.dark.config.auth.JwtAuthenticationEntryPoint;
 import com.github.dark.service.MyUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,6 +18,9 @@ import javax.annotation.Resource;
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Resource
     private MyUserDetailsService myUserDetailsService;
+
+    @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(myUserDetailsService);
@@ -24,8 +29,14 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/auth/authenticate")
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+                .authorizeRequests().antMatchers("/auth/AuthController")
                 .permitAll()
+                //配置swagger地址拦截权限忽视，使得前端可以访问swagger页面
+                .antMatchers("/swagger-ui.html").anonymous()
+                .antMatchers("/swagger-resources/**").anonymous()
+                .antMatchers("/webjars/**").anonymous()
+                .antMatchers("/*/api-docs").anonymous()
                 .anyRequest().authenticated();
     }
 
