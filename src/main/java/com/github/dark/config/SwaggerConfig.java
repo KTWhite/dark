@@ -25,7 +25,7 @@ public class SwaggerConfig {
     public ApiInfo apiInfo() throws Exception{
         return new ApiInfoBuilder()
                 .title("Spring Boot 构建swagger")
-                .description("暗黑天使兽")
+                .description("First")
                 .version("1.0.1")
                 .build();
     }

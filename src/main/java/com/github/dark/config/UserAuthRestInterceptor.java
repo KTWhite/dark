@@ -17,6 +17,9 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * 拦截器实现token拦截
+ */
 @Component
 @Slf4j
 public class UserAuthRestInterceptor extends HandlerInterceptorAdapter {

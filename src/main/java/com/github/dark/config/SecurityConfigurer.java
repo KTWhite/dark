@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Resource
     private MyUserDetailsService myUserDetailsService;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(myUserDetailsService);
