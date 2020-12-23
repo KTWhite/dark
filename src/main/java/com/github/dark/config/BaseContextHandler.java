@@ -13,21 +13,21 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 public class BaseContextHandler {
-    public static ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
+    public static ThreadLocal<Map<Object, Object>> threadLocal = new ThreadLocal<Map<Object, Object>>();
 
-    public static void set(String key, Object value) {
-        Map<String, Object> map = threadLocal.get();
+    public static void set(Object key, Object value) {
+        Map<Object, Object> map = threadLocal.get();
         if (map == null) {
-            map = new HashMap<String, Object>();
+            map = new HashMap<Object, Object>();
             threadLocal.set(map);
         }
         map.put(key, value);
     }
 
     public static Object get(String key){
-        Map<String, Object> map = threadLocal.get();
+        Map<Object, Object> map = threadLocal.get();
         if (map == null) {
-            map = new HashMap<String, Object>();
+            map = new HashMap<Object, Object>();
             threadLocal.set(map);
         }
         return map.get(key);

@@ -40,6 +40,10 @@ public class UserAuthRestInterceptor extends HandlerInterceptorAdapter {
             LoginUser loginUser = jwtUtils.getLoginUser(request);
             if (loginUser!=null){
                 jwtUtils.verifyToken(loginUser);
+                SysUser user = loginUser.getUser();
+                BaseContextHandler.setUserID(user.getId()+"");
+                BaseContextHandler.setUsername(user.getUserName());
+                BaseContextHandler.setToken(loginUser.getToken());
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
