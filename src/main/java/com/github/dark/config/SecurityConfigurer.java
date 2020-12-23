@@ -78,10 +78,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 ).permitAll()
                 .antMatchers("/auth/authenticate").permitAll()
                 //配置swagger地址拦截权限忽视，使得前端可以访问swagger页面
-                .antMatchers("/swagger-ui.html").anonymous()
-                .antMatchers("/swagger-resources/**").anonymous()
-                .antMatchers("/webjars/**").anonymous()
-                .antMatchers("/*/api-docs").anonymous()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/*/api-docs").permitAll()
                 .anyRequest().authenticated();
         //退出登录
         http.logout().logoutUrl("/logout").logoutSuccessHandler(jwtLogoutSuccessHandler);
