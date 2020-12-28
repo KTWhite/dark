@@ -1,6 +1,8 @@
 package com.github.dark.app;
 
+import com.github.dark.annotation.IgnoreToken;
 import com.github.dark.biz.LoginBiz;
+import com.github.dark.config.BaseContextHandler;
 import com.github.dark.entity.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,7 +23,10 @@ public class LoginController {
 
     @GetMapping("/SignIn")
     @ApiOperation("用户登录")
+    @IgnoreToken
     public List<SysUser> SignIn(){
+        String userID = BaseContextHandler.getUserID();
+        System.out.println(userID);
         return loginBiz.signIn();
     }
 }

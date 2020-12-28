@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Component
 @Slf4j
-public class UserAuthRestInterceptor extends HandlerInterceptorAdapter {
+public class UserAuthRestInterceptor implements HandlerInterceptor {
     private static final String TAG="UserAuthRestInterceptor";
     @Autowired
     private JwtUtils jwtUtils;
@@ -33,7 +33,6 @@ public class UserAuthRestInterceptor extends HandlerInterceptorAdapter {
         if (annotation!=null){
             annotation = handlerMethod.getMethodAnnotation(IgnoreToken.class);
             log.debug(TAG,"忽视token，不进行拦截");
-            return super.preHandle(request, response, handler);
         }else{
             //拦截请求，进行请求校验token，通过token获取请求携带的令牌，即用户信息
             //如果用户信息不为空，进行token校验
@@ -48,7 +47,7 @@ public class UserAuthRestInterceptor extends HandlerInterceptorAdapter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-            return super.preHandle(request, response, handler);
         }
+        return true;
     }
 }

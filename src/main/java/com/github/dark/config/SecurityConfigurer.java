@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Resource;
 
@@ -22,7 +24,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     private MyUserDetailsService myUserDetailsService;
 
     @Autowired
-    private CorsFilter corsFilter;
+    private UserAuthRestInterceptor userAuthRestInterceptor;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -47,8 +49,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*/api-docs").anonymous()
                 .antMatchers("/auth/authenticate")
                 .permitAll()
+                .antMatchers("/login/SignIn").permitAll()
                 .anyRequest().authenticated();
-        http.addFilterBefore(corsFilter,AuthenticationTokenFilter.class);
     }
 
     @Override
