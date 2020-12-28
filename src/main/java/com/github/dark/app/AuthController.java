@@ -66,9 +66,10 @@ public class AuthController {
             Browser browser = UserAgent.parseUserAgentString(request.getHeader("user-agent")).getBrowser();
             loginUser.setBrowser(browser.getName());
             String Ip = ipUtils.getIpAddr(request);
+            //TODO IP地址 和 详细地址
             loginUser.setIpaddr(Ip);
-            loginUser.setLoginLocation(ipUtils.ipToAddress(Ip));
-            //TODO
+            loginUser.setLoginLocation(ipUtils.ipToAddress("222.79.173.206"));
+            loginUser.setToken(token);
             System.out.println("用户信息："+loginUser);
             jwtUtils.refreshToken(loginUser);
         }
