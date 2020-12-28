@@ -28,24 +28,26 @@ public class UserAuthRestInterceptor implements HandlerInterceptor {
     private JwtUtils jwtUtils;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
-        IgnoreToken annotation = handlerMethod.getBeanType().getAnnotation(IgnoreToken.class);
-        if (annotation!=null){
-            annotation = handlerMethod.getMethodAnnotation(IgnoreToken.class);
-            log.debug(TAG,"忽视token，不进行拦截");
-        }else{
-            //拦截请求，进行请求校验token，通过token获取请求携带的令牌，即用户信息
-            //如果用户信息不为空，进行token校验
-            LoginUser loginUser = jwtUtils.getLoginUser(request);
-            if (loginUser!=null){
-                jwtUtils.verifyToken(loginUser);
-                SysUser user = loginUser.getUser();
-                BaseContextHandler.setUserID(user.getId()+"");
-                BaseContextHandler.setUsername(user.getUserName());
-                BaseContextHandler.setToken(loginUser.getToken());
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        if ( handler instanceof HandlerMethod){
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            IgnoreToken annotation = handlerMethod.getBeanType().getAnnotation(IgnoreToken.class);
+            if (annotation!=null){
+                annotation = handlerMethod.getMethodAnnotation(IgnoreToken.class);
+                log.debug(TAG,"忽视token，不进行拦截");
+            }else{
+                //拦截请求，进行请求校验token，通过token获取请求携带的令牌，即用户信息
+                //如果用户信息不为空，进行token校验
+                LoginUser loginUser = jwtUtils.getLoginUser(request);
+                if (loginUser!=null){
+                    jwtUtils.verifyToken(loginUser);
+                    SysUser user = loginUser.getUser();
+                    BaseContextHandler.setUserID(user.getId()+"");
+                    BaseContextHandler.setUsername(user.getUserName());
+                    BaseContextHandler.setToken(loginUser.getToken());
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
         }
         return true;

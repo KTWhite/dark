@@ -61,19 +61,17 @@ public class AuthController {
         LoginUser loginUser = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         if (loginUser!=null){
             token = jwtUtils.generateToken(loginUser);
-            Date loginTime= new Date();
-            loginUser.setLoginTime(loginTime.getTime());
+            loginUser.setLoginTime(new Date().getTime());
+            String header = request.getHeader("user-agent");
+            System.out.println(header);
             Browser browser = UserAgent.parseUserAgentString(request.getHeader("user-agent")).getBrowser();
             loginUser.setBrowser(browser.getName());
             String Ip = ipUtils.getIpAddr(request);
             //TODO IP地址 和 详细地址
             loginUser.setIpaddr(Ip);
-            loginUser.setLoginLocation(ipUtils.ipToAddress("222.79.173.206"));
             loginUser.setToken(token);
-            System.out.println("用户信息："+loginUser);
             jwtUtils.refreshToken(loginUser);
         }
-
        return ResponseEntity.ok(new AuthenticationResponse(token));
     }
     @IgnoreToken
