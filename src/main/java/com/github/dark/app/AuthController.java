@@ -28,8 +28,6 @@ import java.util.logging.Logger;
 @Slf4j
 public class AuthController {
     private static final String TAG="AuthController";
-    @Resource
-    private LoginBiz loginBiz;
 
     @Autowired
     private AuthenticationManager authenticationManager;
