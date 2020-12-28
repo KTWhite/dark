@@ -4,11 +4,12 @@ package com.github.dark.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Table(name = "user")
 @Data
-public class SysUser {
+public class SysUser implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)//自增
     private Integer id;

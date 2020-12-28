@@ -9,7 +9,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,15 +62,17 @@ public class JwtUtils {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(LoginUser loginUser){
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims,userDetails.getUsername());
+
+        return createToken(claims,loginUser.getUsername());
     }
     private String createToken(Map<String,Object> claims,String subject){
-        return Jwts.builder().setClaims(claims).setSubject(subject)
+        String token = Jwts.builder().setClaims(claims).setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*60*4))
-                .signWith(SignatureAlgorithm.HS256,SECRET_KEY).compact();
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 4))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+        return token;
     }
     public Boolean validateToken(String token,String user){
         final String username = extractUsername(token);

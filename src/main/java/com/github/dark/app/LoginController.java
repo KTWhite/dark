@@ -23,10 +23,8 @@ public class LoginController {
 
     @GetMapping("/SignIn")
     @ApiOperation("用户登录")
-    @IgnoreToken
     public List<SysUser> SignIn(){
-        String userID = BaseContextHandler.getUserID();
-        System.out.println(userID);
+        System.out.println(BaseContextHandler.getUserID());
         return loginBiz.signIn();
     }
 }

@@ -6,7 +6,7 @@ spring:
   datasource:
     username: ${MYSQL_UserName:dark}
     password: ${MYSQL_PassWord:dark123}
-    url: jdbc:mysql://${MYSQL_HOST:120.77.149.78}:${MYSQL_PORT:3307}/${MYSQL_DBNAME:dark}?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    url: jdbc:mysql://${HOST:120.77.149.78}:${MYSQL_PORT:3307}/${MYSQL_DBNAME:dark}?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
@@ -16,9 +16,9 @@ spring:
       ddl-auto: create
   redis:
     database: 0
-    host: 120.77.149.78
+    host: ${HOST:120.77.149.78}
     port: 6379
-    password: redis123
+    password: ${REDIS_PWD:redis123}
     jedis:
       pool:
         max-active: 20

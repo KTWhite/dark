@@ -2,12 +2,16 @@ package com.github.dark.app;
 
 import com.github.dark.annotation.IgnoreToken;
 import com.github.dark.biz.LoginBiz;
+import com.github.dark.entity.LoginUser;
 import com.github.dark.entity.SysUser;
 import com.github.dark.service.MyUserDetailsService;
+import com.github.dark.utils.IpUtils;
 import com.github.dark.utils.JwtUtils;
 import com.github.dark.vo.request.AuthenticationRequest;
 import com.github.dark.vo.request.VerityToeknRequest;
 import com.github.dark.vo.response.AuthenticationResponse;
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.UserAgent;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import sun.rmi.runtime.Log;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.swing.*;
+import java.util.Date;
 import java.util.logging.Logger;
 
 @RestController
@@ -38,8 +45,11 @@ public class AuthController {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Autowired
+    private IpUtils ipUtils;
+
     @RequestMapping(value = "/authenticate",method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception{
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest request) throws Exception{
         String token=null;
         try {
             authenticationManager.authenticate(
@@ -48,11 +58,21 @@ public class AuthController {
         }catch (BadCredentialsException e){
             throw new Exception("Incorrect username or password",e);
         }
-        UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        if (userDetails!=null){
-            token = jwtUtils.generateToken(userDetails);
+        LoginUser loginUser = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        if (loginUser!=null){
+            token = jwtUtils.generateToken(loginUser);
+            Date loginTime= new Date();
+            loginUser.setLoginTime(loginTime.getTime());
+            Browser browser = UserAgent.parseUserAgentString(request.getHeader("user-agent")).getBrowser();
+            loginUser.setBrowser(browser.getName());
+            String Ip = ipUtils.getIpAddr(request);
+            loginUser.setIpaddr(Ip);
+            loginUser.setLoginLocation(ipUtils.ipToAddress(Ip));
+            //TODO
+            System.out.println("用户信息："+loginUser);
+            jwtUtils.refreshToken(loginUser);
         }
-        log.info(TAG,"用户信息："+userDetails);
+
        return ResponseEntity.ok(new AuthenticationResponse(token));
     }
     @IgnoreToken

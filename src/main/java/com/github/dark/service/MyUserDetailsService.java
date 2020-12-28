@@ -23,7 +23,7 @@ public class MyUserDetailsService implements UserDetailsService {
     @Resource
     private SysUserMapper sysUserMapper;
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public LoginUser loadUserByUsername(String s) throws UsernameNotFoundException {
         SysUser sysUser = sysUserMapper.selectUserByUserName(s);
         if (sysUser==null){
             log.debug(TAG,"登录用户：{} 不存在.",s);
@@ -32,7 +32,7 @@ public class MyUserDetailsService implements UserDetailsService {
             return createLoginUser(sysUser);
         }
     }
-    public UserDetails createLoginUser(SysUser user)
+    public LoginUser createLoginUser(SysUser user)
     {
         return new LoginUser(user);
     }
