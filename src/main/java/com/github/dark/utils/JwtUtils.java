@@ -44,6 +44,8 @@ public class JwtUtils {
 
     private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
 
+    private String userKey= IdUtils.fastSimpleUUID();
+
     private String SECRET_KEY ="3ce47fcc969a4cffa29e298d8f83134eabcdefghijklmn";
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
@@ -64,10 +66,10 @@ public class JwtUtils {
 
     public String generateToken(LoginUser loginUser){
         Map<String, Object> claims = new HashMap<>();
-
-        return createToken(claims,loginUser.getUsername());
+        return createToken(claims,loginUser.getUser().getUserName());
     }
     private String createToken(Map<String,Object> claims,String subject){
+        claims.put(Constants.LOGIN_USER_KEY,userKey);
         String token = Jwts.builder().setClaims(claims).setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 4))
@@ -92,9 +94,8 @@ public class JwtUtils {
         if (StringUtils.isNotEmpty(token))
         {
             Claims claims = extractAllClaims(token);
-            String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
-            String userKey = getTokenKey(token);
-            LoginUser user = redisCache.getCacheObject(userKey);
+            String uuid  = (String) claims.get(Constants.LOGIN_USER_KEY);
+            LoginUser user = redisCache.getCacheObject(uuid);
             return user;
         }
         return null;
@@ -146,8 +147,7 @@ public class JwtUtils {
     {
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
-        // 根据uuid将loginUser缓存
-        String userKey = getTokenKey(loginUser.getUsername());
+        // 根据uuid将loginUser缓存 redis缓存的key是根据用户名和登录时间设置的
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
 }
