@@ -59,7 +59,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                             BaseContextHandler.setUsername(user.getUserName());
                             BaseContextHandler.setUserID(user.getId()+"");
-                            
                         }
                     }
 

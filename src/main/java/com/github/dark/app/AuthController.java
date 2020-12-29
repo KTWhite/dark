@@ -62,8 +62,6 @@ public class AuthController {
         if (loginUser!=null){
             token = jwtUtils.generateToken(loginUser);
             loginUser.setLoginTime(new Date().getTime());
-            String header = request.getHeader("user-agent");
-            System.out.println(header);
             Browser browser = UserAgent.parseUserAgentString(request.getHeader("user-agent")).getBrowser();
             loginUser.setBrowser(browser.getName());
             String Ip = ipUtils.getIpAddr(request);
@@ -74,7 +72,7 @@ public class AuthController {
         }
        return ResponseEntity.ok(new AuthenticationResponse(token));
     }
-    @IgnoreToken
+
     @RequestMapping(value = "/verityToken",method = RequestMethod.POST)
     public ResponseEntity<?> verityAuthenticationToken(@RequestBody VerityToeknRequest verityToeknRequest){
         Boolean veritied = jwtUtils.validateToken(verityToeknRequest.getToken(), verityToeknRequest.getUsername());

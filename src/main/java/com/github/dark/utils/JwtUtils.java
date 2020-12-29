@@ -92,9 +92,8 @@ public class JwtUtils {
         if (StringUtils.isNotEmpty(token))
         {
             Claims claims = extractAllClaims(token);
-            // 解析对应的权限以及用户信息
             String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
-            String userKey = getTokenKey(uuid);
+            String userKey = getTokenKey(token);
             LoginUser user = redisCache.getCacheObject(userKey);
             return user;
         }
@@ -148,7 +147,7 @@ public class JwtUtils {
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + expireTime * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
-        String userKey = getTokenKey(loginUser.getToken());
+        String userKey = getTokenKey(loginUser.getUsername());
         redisCache.setCacheObject(userKey, loginUser, expireTime, TimeUnit.MINUTES);
     }
 }

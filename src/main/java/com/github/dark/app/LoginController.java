@@ -24,7 +24,6 @@ public class LoginController {
     @GetMapping("/SignIn")
     @ApiOperation("用户登录")
     public List<SysUser> SignIn(){
-        System.out.println(BaseContextHandler.getUserID());
         return loginBiz.signIn();
     }
 }
