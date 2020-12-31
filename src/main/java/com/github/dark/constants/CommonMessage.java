@@ -54,4 +54,9 @@ public class CommonMessage {
      * 验证码校验失败，请核实后重试
      */
     public static final String CHECK_VCODE_IS_FAIL = "W00013";
+
+    /**
+     * 没有权限
+     */
+    public final static String NOT_HAVE_AUTH = "W00021";
 }
