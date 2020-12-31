@@ -31,7 +31,7 @@ import java.util.UUID;
 import static com.github.dark.utils.Constants.RESOURCE_PREFIX;
 
 @RestController
-@Api("图片集接口")
+@Api("通用接口")
 @RequestMapping("/common")
 @Slf4j
 public class CommonController {
@@ -67,7 +67,7 @@ public class CommonController {
             // 拷贝文件
             Files.copy(inputStream, directory.resolve(name));
             // url路径
-            String path = urlVal + "/getFile/" + name;
+            String path = urlVal + "/getImgFile/" + name;
             resultData.setData(path);
             return resultData;
         } catch (Exception e) {
@@ -83,8 +83,8 @@ public class CommonController {
      * @param name
      * @throws IOException
      */
-    @ApiOperation("获取文件")
-    @GetMapping("/ign/getFile/{name}")
+    @ApiOperation("获取图片文件")
+    @GetMapping("/ign/getImgFile/{name}")
     public void getImage(HttpServletResponse response, @PathVariable("name") String name) throws IOException {
         String suffix =  name.substring(name.indexOf(".") + 1);
         if (FileUploadUtils.isAllowedExtension(suffix, MimeTypeUtils.MEDIA_EXTENSION)){
