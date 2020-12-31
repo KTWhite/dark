@@ -1,9 +1,6 @@
 package com.github.dark.app;
 
-import com.github.dark.annotation.IgnoreToken;
-import com.github.dark.biz.LoginBiz;
 import com.github.dark.entity.LoginUser;
-import com.github.dark.entity.SysUser;
 import com.github.dark.service.MyUserDetailsService;
 import com.github.dark.utils.IpUtils;
 import com.github.dark.utils.JwtUtils;
@@ -19,15 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import sun.rmi.runtime.Log;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.*;
 import java.util.Date;
-import java.util.logging.Logger;
 
 @RestController
 @Api("用户认证登录")
