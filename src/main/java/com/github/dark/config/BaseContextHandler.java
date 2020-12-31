@@ -1,6 +1,6 @@
 package com.github.dark.config;
 
-import com.github.dark.Constants.CommonConstants;
+import com.github.dark.constants.CommonConstants;
 import com.github.dark.utils.StringHelper;
 import org.junit.Test;
 import org.mockito.junit.MockitoJUnitRunner;

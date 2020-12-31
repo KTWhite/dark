@@ -1,6 +1,6 @@
 package com.github.dark.app;
 
-import com.github.dark.Constants.CommonMessage;
+import com.github.dark.constants.CommonMessage;
 import com.github.dark.commom.ResultData;
 import com.github.dark.utils.FileUploadUtils;
 import com.github.dark.utils.MimeTypeUtils;

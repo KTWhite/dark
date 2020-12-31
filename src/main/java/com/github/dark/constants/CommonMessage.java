@@ -1,4 +1,4 @@
-package com.github.dark.Constants;
+package com.github.dark.constants;
 
 public class CommonMessage {
     /**

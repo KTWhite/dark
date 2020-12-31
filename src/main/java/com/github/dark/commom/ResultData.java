@@ -1,6 +1,6 @@
 package com.github.dark.commom;
 
-import com.github.dark.Constants.CommonMessage;
+import com.github.dark.constants.CommonMessage;
 
 import java.io.Serializable;
 import java.util.Date;

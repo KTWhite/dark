@@ -1,4 +1,4 @@
-package com.github.dark.Constants;
+package com.github.dark.constants;
 
 public class CommonConstants {
     public final static String RESOURCE_TYPE_MENU = "menu";

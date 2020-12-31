@@ -54,5 +54,14 @@ jwt:
   secret: 3ce47fcc969a4cffa29e298d8f83134eabcdefghijklmn
   expireTime: 300
 
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /system/notice/*
+  # 匹配链接
+  urlPatterns: /system/*,/monitor/*,/tool/*
+
 
 
