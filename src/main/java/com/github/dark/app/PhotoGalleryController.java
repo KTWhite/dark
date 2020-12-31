@@ -1,13 +1,18 @@
 package com.github.dark.app;
 
+import com.github.dark.commom.BaseResp;
 import com.github.dark.constants.CommonMessage;
 import com.github.dark.biz.PhotoGalleryBiz;
 import com.github.dark.commom.ResultData;
 import com.github.dark.config.BaseContextHandler;
+import com.github.dark.entity.PhotoCommentEntity;
 import com.github.dark.entity.PhotoGalleryEntity;
+import com.github.dark.vo.request.CommentReq;
+import com.github.dark.vo.request.PhotoReq;
 import com.github.dark.vo.response.EditPhotosResp;
-import com.github.dark.vo.response.PhotoResp;
 import com.github.dark.vo.request.SavePhotoReq;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +31,11 @@ public class PhotoGalleryController {
     private PhotoGalleryBiz photoGalleryBiz;
 
     @PostMapping("/getPhotos")
-    public ResultData<List<PhotoGalleryEntity>> getPhotos(@RequestBody PhotoResp photoResp){
-        ResultData<List<PhotoGalleryEntity>> list = new ResultData<>();
+    public ResultData<BaseResp> getPhotos(@RequestBody PhotoReq photoReq){
+        ResultData<BaseResp> resultData = new ResultData<>();
         String userId = BaseContextHandler.getUserID();
-        List<PhotoGalleryEntity> photos = photoGalleryBiz.getPhotos(photoResp,userId);
-        list.setData(photos);
-        return list;
+        resultData.setData(photoGalleryBiz.getPhotos(photoReq,userId));
+        return resultData;
     }
 
     @PostMapping("/savePhotos")
@@ -74,6 +78,19 @@ public class PhotoGalleryController {
             resultData.setCode(CommonMessage.ERROR);
             resultData.setMsg("删除异常");
         }
+        return resultData;
+    }
+
+    @PostMapping("/getComments")
+    public ResultData<BaseResp> getComments(@RequestBody CommentReq commentReq){
+        ResultData<BaseResp> resultData = new ResultData<>();
+        BaseResp<PhotoCommentEntity> baseResp = new BaseResp<>();
+        String userID = BaseContextHandler.getUserID();
+        Page<Object> page = PageHelper.startPage(commentReq.getPageNo(), commentReq.getPageSize());
+        List<PhotoCommentEntity> list = photoGalleryBiz.getComments(commentReq, userID);
+        baseResp.setList(list);
+        baseResp.setTotal(page.getTotal());
+        resultData.setData(baseResp);
         return resultData;
     }
 
