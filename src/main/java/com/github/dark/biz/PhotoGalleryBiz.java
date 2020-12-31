@@ -7,7 +7,9 @@ import com.github.dark.mapper.PhotoCommentMapper;
 import com.github.dark.mapper.PhotoGalleryMapper;
 import com.github.dark.vo.request.CommentReq;
 import com.github.dark.vo.request.PhotoReq;
+import com.github.dark.vo.request.SaveCommentReq;
 import com.github.dark.vo.request.SavePhotoReq;
+import com.github.dark.vo.response.EditCommentResp;
 import com.github.dark.vo.response.EditPhotosResp;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -42,14 +44,24 @@ public class PhotoGalleryBiz {
     }
 
     public Integer savePhotos(SavePhotoReq savePhotoReq,String userId){
-        PhotoGalleryEntity photoGalleryEntity = new PhotoGalleryEntity(null,savePhotoReq.getImgName(),savePhotoReq.getImgUrl(),savePhotoReq.getImgType(),
-                savePhotoReq.getImgParent(),userId,new Date(),new Date());
+        PhotoGalleryEntity photoGalleryEntity = new PhotoGalleryEntity();
+        photoGalleryEntity.setUserId(Integer.valueOf(userId));
+        photoGalleryEntity.setImgName(savePhotoReq.getImgName());
+        photoGalleryEntity.setImgUrl(savePhotoReq.getImgUrl());
+        photoGalleryEntity.setImgParent(savePhotoReq.getImgParent());
+        photoGalleryEntity.setImgType(savePhotoReq.getImgType());
+        photoGalleryEntity.setCreateTime(new Date());
+        photoGalleryEntity.setUpdateTime(new Date());
         return photoGalleryMapper.insert(photoGalleryEntity);
     }
 
     public Integer editPhotos(EditPhotosResp editPhotosResp,String userId){
-        PhotoGalleryEntity photoGalleryEntity = new PhotoGalleryEntity(editPhotosResp.getId(), editPhotosResp.getImgName(), editPhotosResp.getImgUrl(),
-                editPhotosResp.getImgType(), editPhotosResp.getImgParent(), null,null,new Date());
+        PhotoGalleryEntity photoGalleryEntity = new PhotoGalleryEntity();
+        photoGalleryEntity.setImgType(editPhotosResp.getImgType());
+        photoGalleryEntity.setImgParent(editPhotosResp.getImgParent());
+        photoGalleryEntity.setImgUrl(editPhotosResp.getImgUrl());
+        photoGalleryEntity.setImgName(editPhotosResp.getImgName());
+        photoGalleryEntity.setUpdateTime(new Date());
         Example example = new Example(PhotoGalleryEntity.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("userId",userId);
@@ -65,5 +77,24 @@ public class PhotoGalleryBiz {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("userId",userId);
         return photoCommentMapper.selectByExample(example);
+    }
+    public Integer saveComments(SaveCommentReq saveCommentReq,String userId){
+        PhotoCommentEntity photoCommentEntity = new PhotoCommentEntity();
+        photoCommentEntity.setComment(saveCommentReq.getComment());
+        photoCommentEntity.setCreateTime(saveCommentReq.getCreateTime());
+        photoCommentEntity.setUserId(Integer.valueOf(userId));
+        return photoCommentMapper.insert(photoCommentEntity);
+    }
+
+    public Integer editComments(EditCommentResp commentResp,String userId){
+        PhotoCommentEntity photoCommentEntity = new PhotoCommentEntity();
+        photoCommentEntity.setComment(commentResp.getComment());
+        Example example = new Example(PhotoCommentEntity.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId",userId);
+        return photoCommentMapper.updateByExampleSelective(photoCommentEntity,example);
+    }
+    public Integer deleteComments(Integer id){
+        return photoCommentMapper.deleteByPrimaryKey(id);
     }
 }

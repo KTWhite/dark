@@ -9,6 +9,8 @@ import com.github.dark.entity.PhotoCommentEntity;
 import com.github.dark.entity.PhotoGalleryEntity;
 import com.github.dark.vo.request.CommentReq;
 import com.github.dark.vo.request.PhotoReq;
+import com.github.dark.vo.request.SaveCommentReq;
+import com.github.dark.vo.response.EditCommentResp;
 import com.github.dark.vo.response.EditPhotosResp;
 import com.github.dark.vo.request.SavePhotoReq;
 import com.github.pagehelper.Page;
@@ -91,6 +93,50 @@ public class PhotoGalleryController {
         baseResp.setList(list);
         baseResp.setTotal(page.getTotal());
         resultData.setData(baseResp);
+        return resultData;
+    }
+    @PostMapping("/saveComments")
+    public ResultData<Boolean> saveComments(@RequestBody SaveCommentReq saveCommentReq){
+        ResultData<Boolean> resultData = new ResultData<>();
+        String userId = BaseContextHandler.getUserID();
+        boolean save = photoGalleryBiz.saveComments(saveCommentReq, userId) > 0 ? true : false;
+        if (save){
+            resultData.setData(true);
+        }else{
+            resultData.setData(false);
+            resultData.setMsg("添加异常");
+            resultData.setCode(CommonMessage.ERROR);
+        }
+        return resultData;
+    }
+
+    @PostMapping("editComments")
+    public ResultData<Boolean> editComments(@RequestBody EditCommentResp editCommentResp){
+        ResultData<Boolean> resultData = new ResultData<>();
+        String userID = BaseContextHandler.getUserID();
+        boolean edit = photoGalleryBiz.editComments(editCommentResp, userID) > 0 ? true : false;
+        if (edit){
+            resultData.setData(true);
+        }else{
+            resultData.setData(false);
+            resultData.setMsg("修改异常");
+            resultData.setCode(CommonMessage.ERROR);
+        }
+        return resultData;
+    }
+
+
+    @DeleteMapping("/deleteComments")
+    public ResultData<Boolean> deleteComments(@RequestParam("id") Integer id){
+        ResultData<Boolean> resultData = new ResultData<>();
+        boolean delete = photoGalleryBiz.deleteComments(id) > 0 ? true : false;
+        if (delete){
+            resultData.setData(true);
+        }else {
+            resultData.setData(false);
+            resultData.setCode(CommonMessage.ERROR);
+            resultData.setMsg("删除评论异常");
+        }
         return resultData;
     }
 

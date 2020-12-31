@@ -22,4 +22,6 @@ public class PhotoCommentEntity {
 
     @Column(name = "create_time")
     private Date createTime;
+
+
 }
