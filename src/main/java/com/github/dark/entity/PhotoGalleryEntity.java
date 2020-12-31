@@ -1,10 +1,13 @@
 package com.github.dark.entity;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name = "dark_photo_gallery")
+@Data
 public class PhotoGalleryEntity {
 
     @Id

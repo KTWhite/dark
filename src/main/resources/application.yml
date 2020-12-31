@@ -38,7 +38,6 @@ pagehelper:
   helperDialect: MYSQL
   reasonable: true
   supportMethodsArguments: true
-  params: count=countSql
 logging:
   level:
     com.example: info
