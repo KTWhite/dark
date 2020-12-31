@@ -10,6 +10,17 @@ import javax.persistence.Table;
 @Data
 public class PhotoGalleryEntity {
 
+    public PhotoGalleryEntity(Integer id,String imgName, String imgUrl, Integer imgType, Integer imgParent,String userId) {
+        this.id=id;
+        this.imgName = imgName;
+        this.imgUrl = imgUrl;
+        this.imgType = imgType;
+        this.imgParent = imgParent;
+        if (userId!=null&&(userId instanceof String)){
+            this.userId = Integer.valueOf(userId);
+        }
+    }
+
     @Id
     private Integer id;
 
