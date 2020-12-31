@@ -8,15 +8,20 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 import javax.naming.NoPermissionException;
+import java.util.HashSet;
+import java.util.Set;
 
 @Aspect
 @Component
 public class PhotosAspect {
-    @Around("execution(* com.github.dark.app.PhotoGalleryController.*(..))")
+    private Set<String> permissions=new HashSet<>();
+    @Around("execution(* com.github.dark.app.PhotoGalleryController.getPhotos(*))")
     public Object checkPhotos(ProceedingJoinPoint joinPoint) throws Throwable{
+        permissions.add("vip");
+        permissions.add("admin");
         String userRole = BaseContextHandler.getUserRole();
-        if (!StringUtils.equals(userRole,"vip")){
-            throw new NoPermissionException("Vip用户才可使用此功能");
+        if (!permissions.contains(userRole)){
+            throw new NoPermissionException("用户权限不足，无法使用该功能！");
         }
         return joinPoint.proceed();
     }
