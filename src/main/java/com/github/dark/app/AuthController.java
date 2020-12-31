@@ -1,10 +1,13 @@
 package com.github.dark.app;
 
+import com.github.dark.commom.ResultData;
+import com.github.dark.constants.CommonMessage;
 import com.github.dark.entity.LoginUser;
 import com.github.dark.service.MyUserDetailsService;
 import com.github.dark.utils.IpUtils;
 import com.github.dark.utils.JwtUtils;
 import com.github.dark.vo.request.AuthenticationRequest;
+import com.github.dark.vo.request.RegisterReq;
 import com.github.dark.vo.request.VerityToeknRequest;
 import com.github.dark.vo.response.AuthenticationResponse;
 import eu.bitwalker.useragentutils.Browser;
@@ -73,5 +76,19 @@ public class AuthController {
         }else{
             return ResponseEntity.ok("验证失败!");
         }
+    }
+
+    @RequestMapping(value = "/ign/register",method = RequestMethod.POST)
+    public ResponseEntity<?> register(@RequestBody RegisterReq registerReq){
+        ResultData<Boolean> resultData = new ResultData<>();
+        boolean save = userDetailsService.register(registerReq) > 0 ? true : false;
+        if (save){
+            resultData.setData(true);
+        }else{
+            resultData.setData(false);
+            resultData.setMsg("注册失败");
+            resultData.setCode(CommonMessage.ERROR);
+        }
+        return ResponseEntity.ok(resultData);
     }
 }
