@@ -2,6 +2,7 @@ package com.github.dark.app;
 
 import com.github.dark.biz.PhotoGalleryBiz;
 import com.github.dark.commom.ResultData;
+import com.github.dark.config.BaseContextHandler;
 import com.github.dark.entity.PhotoGalleryEntity;
 import com.github.dark.vo.request.PhotoResp;
 import com.github.dark.vo.response.PhotoListResponse;
@@ -29,8 +30,11 @@ public class PhotoGalleryController {
     @PostMapping("/getPhotos")
     public ResultData<List<PhotoGalleryEntity>> getPhotos(@RequestBody PhotoResp photoResp){
         ResultData<List<PhotoGalleryEntity>> list = new ResultData<>();
-        List<PhotoGalleryEntity> photos = photoGalleryBiz.getPhotos(photoResp);
+        String userId = BaseContextHandler.getUserID();
+        List<PhotoGalleryEntity> photos = photoGalleryBiz.getPhotos(photoResp,userId);
         list.setData(photos);
         return list;
     }
+
+
 }

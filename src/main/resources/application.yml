@@ -1,3 +1,7 @@
+dark:
+  name: dark
+  version: 1.0.0
+  profile: D:/ruoyi/uploadPath
 server:
   port: 28889
   servlet:
@@ -49,4 +53,6 @@ jwt:
   # 使用Base64对该令牌进行编码
   secret: 3ce47fcc969a4cffa29e298d8f83134eabcdefghijklmn
   expireTime: 300
+
+
 

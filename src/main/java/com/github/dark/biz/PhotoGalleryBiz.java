@@ -18,9 +18,13 @@ public class PhotoGalleryBiz {
     private PhotoGalleryMapper photoGalleryMapper;
 
 
-    public List<PhotoGalleryEntity> getPhotos(PhotoResp photoResp){
+    public List<PhotoGalleryEntity> getPhotos(PhotoResp photoResp,String userId){
         PageHelper.startPage(photoResp.getPageNo(),photoResp.getPageSize());
-        List<PhotoGalleryEntity> photoGalleryEntities = photoGalleryMapper.selectAll();
+        Example example = new Example(PhotoGalleryEntity.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId",userId);
+        example.selectProperties("id","imgName","imgUrl","imgType","imgParent");
+        List<PhotoGalleryEntity> photoGalleryEntities = photoGalleryMapper.selectByExample(example);
         return photoGalleryEntities;
     }
 }
