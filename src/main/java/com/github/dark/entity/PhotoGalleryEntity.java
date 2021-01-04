@@ -43,4 +43,10 @@ public class PhotoGalleryEntity {
 
     @Column(name = "img_cover")
     private Integer cover;
+
+    @Column(name = "collect")
+    private Integer collect;
+
+    @Column(name = "monitor")
+    private Integer monitor;
 }

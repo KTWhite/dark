@@ -97,4 +97,35 @@ public class PhotoGalleryBiz {
     public Integer deleteComments(Integer id){
         return photoCommentMapper.deleteByPrimaryKey(id);
     }
+
+    //收藏项目
+    public Integer doCollect(Integer id,Boolean status){
+        Example example = new Example(PhotoGalleryEntity.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("id",id);
+        PhotoGalleryEntity photoGalleryEntity = new PhotoGalleryEntity();
+        if (status){
+            //收藏
+            photoGalleryEntity.setCollect(1);
+        }else{
+            //取消收藏
+            photoGalleryEntity.setCollect(0);
+        }
+        return photoGalleryMapper.updateByExampleSelective(photoGalleryEntity,example);
+    }
+    //监控项目
+    public Integer doMonitor(Integer id,Boolean status){
+        Example example = new Example(PhotoGalleryEntity.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("id",id);
+        PhotoGalleryEntity photoGalleryEntity = new PhotoGalleryEntity();
+        if (status){
+            //监控
+            photoGalleryEntity.setMonitor(1);
+        }else{
+            //取消监控
+            photoGalleryEntity.setMonitor(0);
+        }
+        return photoGalleryMapper.updateByExampleSelective(photoGalleryEntity,example);
+    }
 }

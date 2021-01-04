@@ -71,8 +71,8 @@ public class AuthController {
 
     @RequestMapping(value = "/verityToken",method = RequestMethod.POST)
     public ResponseEntity<?> verityAuthenticationToken(@RequestBody VerityToeknRequest verityToeknRequest){
-        Boolean veritied = jwtUtils.validateToken(verityToeknRequest.getToken(), verityToeknRequest.getUsername());
-        if (veritied){
+        Boolean verified = jwtUtils.validateToken(verityToeknRequest.getToken(), verityToeknRequest.getUsername());
+        if (verified){
             return ResponseEntity.ok("验证成功!");
         }else{
             return ResponseEntity.ok("验证失败!");

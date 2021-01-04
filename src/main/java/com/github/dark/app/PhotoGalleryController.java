@@ -44,14 +44,12 @@ public class PhotoGalleryController {
     public ResultData<Boolean> savePhotos(@RequestBody SavePhotoReq savePhotoReq){
         ResultData<Boolean> resultData = new ResultData<>();
         String userId = BaseContextHandler.getUserID();
-        boolean saved = photoGalleryBiz.savePhotos(savePhotoReq,userId) > 0 ? true : false;
-        if (saved){
-            resultData.setData(true);
-            resultData.setCode(CommonMessage.SUCCESS);
-        }else{
-            resultData.setData(false);
+        try {
+            resultData.setData(photoGalleryBiz.savePhotos(savePhotoReq,userId) > 0 ? true : false);
+        }catch (Exception e){
+            e.printStackTrace();
             resultData.setCode(CommonMessage.ERROR);
-            resultData.setMsg("添加异常");
+            resultData.setMsg("添加行为异常");
         }
         return resultData;
     }
@@ -59,26 +57,24 @@ public class PhotoGalleryController {
     public ResultData<Boolean> editPhotos(@RequestBody EditPhotosResp editPhotosResp){
         ResultData<Boolean> resultData = new ResultData<>();
         String userID = BaseContextHandler.getUserID();
-        boolean editor = photoGalleryBiz.editPhotos(editPhotosResp, userID) > 0 ? true : false;
-        if (editor){
-            resultData.setData(true);
-        }else {
-            resultData.setData(false);
+        try {
+            resultData.setData(photoGalleryBiz.editPhotos(editPhotosResp, userID) > 0 ? true : false);
+        }catch (Exception e){
+            e.printStackTrace();
             resultData.setCode(CommonMessage.ERROR);
-            resultData.setMsg("修改异常");
+            resultData.setMsg("修改行为异常");
         }
         return resultData;
     }
     @DeleteMapping("/deletePhotos")
     public ResultData<Boolean> deletePhotos(@RequestParam("id") Integer id){
         ResultData<Boolean> resultData = new ResultData<>();
-        boolean delete = photoGalleryBiz.deletePhotos(id) > 0 ? true : false;
-        if (delete){
-            resultData.setData(true);
-        }else{
-            resultData.setData(false);
+        try {
+            resultData.setData(photoGalleryBiz.deletePhotos(id) > 0 ? true : false);
+        }catch (Exception e){
+            e.printStackTrace();
+            resultData.setMsg("删除行为异常");
             resultData.setCode(CommonMessage.ERROR);
-            resultData.setMsg("删除异常");
         }
         return resultData;
     }
@@ -99,13 +95,12 @@ public class PhotoGalleryController {
     public ResultData<Boolean> saveComments(@RequestBody SaveCommentReq saveCommentReq){
         ResultData<Boolean> resultData = new ResultData<>();
         String userId = BaseContextHandler.getUserID();
-        boolean save = photoGalleryBiz.saveComments(saveCommentReq, userId) > 0 ? true : false;
-        if (save){
-            resultData.setData(true);
-        }else{
-            resultData.setData(false);
-            resultData.setMsg("添加异常");
+        try {
+            resultData.setData(photoGalleryBiz.saveComments(saveCommentReq, userId) > 0 ? true : false);
+        }catch (Exception e){
+            e.printStackTrace();
             resultData.setCode(CommonMessage.ERROR);
+            resultData.setMsg("保存评论异常");
         }
         return resultData;
     }
@@ -114,13 +109,12 @@ public class PhotoGalleryController {
     public ResultData<Boolean> editComments(@RequestBody EditCommentResp editCommentResp){
         ResultData<Boolean> resultData = new ResultData<>();
         String userID = BaseContextHandler.getUserID();
-        boolean edit = photoGalleryBiz.editComments(editCommentResp, userID) > 0 ? true : false;
-        if (edit){
-            resultData.setData(true);
-        }else{
-            resultData.setData(false);
-            resultData.setMsg("修改异常");
+        try {
+            resultData.setData(photoGalleryBiz.editComments(editCommentResp, userID) > 0 ? true : false);
+        }catch (Exception e){
+            e.printStackTrace();
             resultData.setCode(CommonMessage.ERROR);
+            resultData.setMsg("修改评论异常");
         }
         return resultData;
     }
@@ -129,11 +123,10 @@ public class PhotoGalleryController {
     @DeleteMapping("/deleteComments")
     public ResultData<Boolean> deleteComments(@RequestParam("id") Integer id){
         ResultData<Boolean> resultData = new ResultData<>();
-        boolean delete = photoGalleryBiz.deleteComments(id) > 0 ? true : false;
-        if (delete){
-            resultData.setData(true);
-        }else {
-            resultData.setData(false);
+        try {
+            resultData.setData(photoGalleryBiz.deleteComments(id) > 0 ? true : false);
+        }catch (Exception e){
+            e.printStackTrace();
             resultData.setCode(CommonMessage.ERROR);
             resultData.setMsg("删除评论异常");
         }
