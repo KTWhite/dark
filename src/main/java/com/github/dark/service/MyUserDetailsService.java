@@ -33,6 +33,9 @@ public class MyUserDetailsService implements UserDetailsService {
         if (sysUser==null){
             log.debug(TAG,"登录用户：{} 不存在.",s);
             throw new UsernameNotFoundException("登录用户：" + s + " 不存在");
+            //TODO
+            //创建新用户
+//        sysUserMapper.insert(user);
         }else {
             return createLoginUser(sysUser);
         }
