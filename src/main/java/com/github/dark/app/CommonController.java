@@ -3,6 +3,7 @@ package com.github.dark.app;
 import com.github.dark.constants.CommonMessage;
 import com.github.dark.commom.ResultData;
 import com.github.dark.utils.FileUploadUtils;
+import com.github.dark.utils.FileUtils;
 import com.github.dark.utils.MimeTypeUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +37,9 @@ public class CommonController {
     @Value("${file_url:https://qzzsfat.fjpszx.com/dev-api}")
     private String url;
 
+    @Resource
+    private FileUtils fileUtils;
+
     @RequestMapping(value = "/ign/uploads",method = RequestMethod.POST,headers = "content-type=multipart/form-data")
     @ApiOperation("批量文件上传")
     public ResultData<Set<String>> uploads(@RequestParam("file") MultipartFile[] files, HttpServletRequest request) {
@@ -43,30 +48,7 @@ public class CommonController {
         for (int i=0;i<files.length;i++){
             MultipartFile file = files[i];
             try {
-                String name = file.getOriginalFilename();
-                if (StringUtils.isBlank(name)){
-                    resultData.setCode(CommonMessage.ERROR);
-                    resultData.setMsg("请上传正确文件");
-                    return resultData;
-                }
-                String suffix =  name.substring(name.indexOf("."));
-                name = UUID.randomUUID().toString().replace("-", "") + suffix;
-                InputStream inputStream = file.getInputStream();
-                // 获得客户端发送请求的完整url
-                String url = request.getRequestURL().toString();
-                // 获得去除接口前的url
-                String urlVal = url.replace("/upload", "");
-                // 目录路径
-                Path directory = Paths.get(RESOURCE_PREFIX);
-                // 判断目录是否存在，不存在创建
-                if (!Files.exists(directory)) {
-                    Files.createDirectories(directory);
-                }
-                assert name != null;
-                // 拷贝文件
-                Files.copy(inputStream, directory.resolve(name));
-                // url路径
-                String path = urlVal + "/getImgFile/" + name;
+                String path = fileUtils.uploadsFile(file, request);
                 urlSet.add(path);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
@@ -77,38 +59,15 @@ public class CommonController {
     }
 
     @RequestMapping(value = "/ign/upload",method = RequestMethod.POST,headers = "content-type=multipart/form-data")
-    @ApiOperation("批量文件上传")
+    @ApiOperation("单文件上传")
     public ResultData<String> upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         ResultData<String> resultData = new ResultData<>();
-        try {
-            String name = file.getOriginalFilename();
-            if (StringUtils.isBlank(name)){
-                resultData.setCode(CommonMessage.ERROR);
-                resultData.setMsg("请上传正确文件");
-                return resultData;
-            }
-            String suffix =  name.substring(name.indexOf("."));
-            name = UUID.randomUUID().toString().replace("-", "") + suffix;
-            InputStream inputStream = file.getInputStream();
-            // 获得客户端发送请求的完整url
-            String url = request.getRequestURL().toString();
-            // 获得去除接口前的url
-            String urlVal = url.replace("/upload", "");
-            // 目录路径
-            Path directory = Paths.get(RESOURCE_PREFIX);
-            // 判断目录是否存在，不存在创建
-            if (!Files.exists(directory)) {
-                Files.createDirectories(directory);
-            }
-            assert name != null;
-            // 拷贝文件
-            Files.copy(inputStream, directory.resolve(name));
-            // url路径
-            String path = urlVal + "/getImgFile/" + name;
+        String path = fileUtils.uploadsFile(file, request);
+        if (path!=null){
             resultData.setData(path);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            resultData.setData(e.getMessage());
+        }else{
+            resultData.setData("请上传正确文件");
+            resultData.setCode(CommonMessage.ERROR);
         }
         return resultData;
     }
