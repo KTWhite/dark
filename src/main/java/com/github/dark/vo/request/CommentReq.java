@@ -4,4 +4,5 @@ import lombok.Data;
 
 @Data
 public class CommentReq extends BaseRequest {
+    Integer galleryId;
 }

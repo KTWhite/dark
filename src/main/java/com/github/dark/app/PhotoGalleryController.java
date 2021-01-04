@@ -66,6 +66,19 @@ public class PhotoGalleryController {
         }
         return resultData;
     }
+    @GetMapping("/findPhotosInfoById")
+    public ResultData<PhotoGalleryEntity> findPhotosInfoById(@RequestParam("id")Integer id){
+        ResultData<PhotoGalleryEntity> resultData = new ResultData<>();
+        try {
+            resultData.setData(photoGalleryBiz.findPhotosInfoById(id));
+        }catch (Exception e){
+            resultData.setMsg("获取详情异常");
+            resultData.setCode(CommonMessage.ERROR);
+        }
+        return resultData;
+    }
+
+
     @DeleteMapping("/deletePhotos")
     public ResultData<Boolean> deletePhotos(@RequestParam("id") Integer id){
         ResultData<Boolean> resultData = new ResultData<>();
@@ -118,7 +131,6 @@ public class PhotoGalleryController {
         }
         return resultData;
     }
-
 
     @DeleteMapping("/deleteComments")
     public ResultData<Boolean> deleteComments(@RequestParam("id") Integer id){

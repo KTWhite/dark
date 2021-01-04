@@ -23,5 +23,8 @@ public class PhotoCommentEntity {
     @Column(name = "create_time")
     private Date createTime;
 
+    @Column(name = "gallery_id")
+    private Integer galleryId;
+
 
 }

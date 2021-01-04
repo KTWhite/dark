@@ -25,4 +25,10 @@ public class PhotosAspect {
         }
         return joinPoint.proceed();
     }
+    @Around("execution(* com.github.dark.app.PhotoGalleryController.findPhotosInfoById(*))")
+    public Object monitorAction(ProceedingJoinPoint joinPoint) throws Throwable{
+        System.out.println("用户点击图片");
+        //TODO 记录用户点击行为 进行后期的统计分析
+        return joinPoint.proceed();
+    }
 }

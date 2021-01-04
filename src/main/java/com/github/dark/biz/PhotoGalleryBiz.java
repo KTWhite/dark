@@ -67,6 +67,10 @@ public class PhotoGalleryBiz {
         criteria.andEqualTo("userId",userId);
         return photoGalleryMapper.updateByExampleSelective(photoGalleryEntity,example);
     }
+
+    public PhotoGalleryEntity  findPhotosInfoById(Integer id){
+        return photoGalleryMapper.selectByPrimaryKey(id);
+    }
     public Integer deletePhotos(Integer id){
         return photoGalleryMapper.deleteByPrimaryKey(id);
     }
@@ -76,6 +80,7 @@ public class PhotoGalleryBiz {
         example.selectProperties("id","comment","createTime");
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("userId",userId);
+        criteria.andEqualTo("galleryId",commentReq.getGalleryId());
         return photoCommentMapper.selectByExample(example);
     }
     public Integer saveComments(SaveCommentReq saveCommentReq,String userId){
