@@ -35,9 +35,9 @@ public class CommonController {
     @Value("${file_url:https://qzzsfat.fjpszx.com/dev-api}")
     private String url;
 
-    @RequestMapping(value = "/ign/upload",method = RequestMethod.POST,headers = "content-type=multipart/form-data")
-    @ApiOperation("文件上传")
-    public ResultData<Set<String>> upload(@RequestParam("file") MultipartFile[] files, HttpServletRequest request) {
+    @RequestMapping(value = "/ign/uploads",method = RequestMethod.POST,headers = "content-type=multipart/form-data")
+    @ApiOperation("批量文件上传")
+    public ResultData<Set<String>> uploads(@RequestParam("file") MultipartFile[] files, HttpServletRequest request) {
         ResultData<Set<String>> resultData = new ResultData<>();
         Set<String> urlSet=new HashSet<>();
         for (int i=0;i<files.length;i++){
@@ -73,6 +73,43 @@ public class CommonController {
             }
         }
         resultData.setData(urlSet);
+        return resultData;
+    }
+
+    @RequestMapping(value = "/ign/upload",method = RequestMethod.POST,headers = "content-type=multipart/form-data")
+    @ApiOperation("批量文件上传")
+    public ResultData<String> upload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        ResultData<String> resultData = new ResultData<>();
+        try {
+            String name = file.getOriginalFilename();
+            if (StringUtils.isBlank(name)){
+                resultData.setCode(CommonMessage.ERROR);
+                resultData.setMsg("请上传正确文件");
+                return resultData;
+            }
+            String suffix =  name.substring(name.indexOf("."));
+            name = UUID.randomUUID().toString().replace("-", "") + suffix;
+            InputStream inputStream = file.getInputStream();
+            // 获得客户端发送请求的完整url
+            String url = request.getRequestURL().toString();
+            // 获得去除接口前的url
+            String urlVal = url.replace("/upload", "");
+            // 目录路径
+            Path directory = Paths.get(RESOURCE_PREFIX);
+            // 判断目录是否存在，不存在创建
+            if (!Files.exists(directory)) {
+                Files.createDirectories(directory);
+            }
+            assert name != null;
+            // 拷贝文件
+            Files.copy(inputStream, directory.resolve(name));
+            // url路径
+            String path = urlVal + "/getImgFile/" + name;
+            resultData.setData(path);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            resultData.setData(e.getMessage());
+        }
         return resultData;
     }
 
