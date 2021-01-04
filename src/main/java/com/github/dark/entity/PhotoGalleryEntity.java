@@ -37,4 +37,10 @@ public class PhotoGalleryEntity {
     @Column(name = "update_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    @Column(name = "page_no")
+    private Integer pageNo;
+
+    @Column(name = "img_cover")
+    private Integer cover;
 }
