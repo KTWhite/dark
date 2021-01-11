@@ -1,5 +1,6 @@
 package com.github.dark.app;
 
+import com.github.dark.annotation.RunTimeLog;
 import com.github.dark.constants.CommonMessage;
 import com.github.dark.commom.ResultData;
 import com.github.dark.utils.FileUploadUtils;
@@ -29,7 +30,7 @@ import java.util.UUID;
 import static com.github.dark.utils.Constants.RESOURCE_PREFIX;
 
 @RestController
-@Api("通用接口")
+@Api(tags = "通用接口")
 @RequestMapping("/common")
 @Slf4j
 public class CommonController {
@@ -93,4 +94,12 @@ public class CommonController {
         outputStream.flush();
         outputStream.close();
     }
+
+    @RunTimeLog
+    @ApiOperation("测试方法")
+    @GetMapping("/ign/testFunction")
+    public void testFunction(){
+        System.out.println("测试方法时间");
+    }
+
 }

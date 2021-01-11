@@ -3,11 +3,13 @@ package com.github.dark.app;
 import com.github.dark.biz.ParkStatisticBiz;
 import com.github.dark.commom.ResultData;
 import com.github.dark.constants.CommonMessage;
+import com.github.dark.entity.ParkDataSynEntity;
 import com.github.dark.entity.ParkEntEntity;
 import com.github.dark.entity.ParkIndustryEntity;
 import com.github.dark.vo.request.BaseRequest;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@Api("通用接口")
+@Api(tags = "园区企业统计")
 @RequestMapping("/statistic")
 @Slf4j
 public class ParkStatisticController {
@@ -65,19 +67,36 @@ public class ParkStatisticController {
     }
 
     @RequestMapping(value = "/ign/getParkEnt",method = RequestMethod.POST)
-    @ApiOperation("企业信息")
-    public ResultData<Boolean> getParkEnt(@RequestBody BaseRequest baseRequest){
-        ResultData<Boolean> resultData = new ResultData<>();
-        List<ParkEntEntity> entInfo = parkStatisticBiz.getEntInfoByLng();
+    @ApiOperation("园区统计信息")
+    public ResultData<Integer> getParkEnt(@RequestBody BaseRequest baseRequest){
+        ResultData<Integer> resultData = new ResultData<>();
+        List<ParkDataSynEntity> entInfo = parkStatisticBiz.getEntInfoByLng();
         entInfo.stream().forEach(x->{
             String lng = x.getLng();
             String lat = x.getLat();
-            System.out.println("获取到的经度:"+lng+",获取到的纬度："+lat);
+            System.out.println(x.getEntName()+"-> 获取到的经度:"+lng+",获取到的纬度："+lat);
             if (lng!=null&&lng.length()>0&&lat!=null&&lat.length()>0){
                 parkStatisticBiz.getDistance(lng, lat,x);
             }
         });
-        resultData.setData(true);
+        System.out.println("更新企业园区名称结束");
+        Integer parkCount = parkStatisticBiz.getParkCount();
+        resultData.setData(parkCount);
+        resultData.setMsg("当前已更新的企业的园区数量为："+parkCount);
+        return resultData;
+    }
+
+    @RequestMapping(value = "/ign/parkByAddress",method = RequestMethod.POST)
+    @ApiOperation("根据企业地址配置园区")
+    public ResultData<Integer> parkByAddress(){
+        ResultData<Integer> resultData= new ResultData<>();
+        List<ParkDataSynEntity> entInfo = parkStatisticBiz.getEntInfoByLng();
+        entInfo.stream().forEach(x->{
+            parkStatisticBiz.parkByAddress(x);
+        });
+        Integer parkCount = parkStatisticBiz.getParkCount();
+        resultData.setData(parkCount);
+        resultData.setMsg("当前已更新的企业的园区数量为："+parkCount);
         return resultData;
     }
     @RequestMapping(value = "/ign/updatePlate",method = RequestMethod.GET)
@@ -87,6 +106,14 @@ public class ParkStatisticController {
         parkStatisticBiz.updatePlate(plate,code);
     }
 
+    @RequestMapping(value = "/ign/distance",method = RequestMethod.GET)
+    @ApiOperation("经纬度距离计算")
+    public Double Distance(@RequestParam("lng")Double lng,
+                         @RequestParam("lat")Double lat,
+                         @RequestParam("lng2") Double lng2,
+                         @RequestParam("lat2")Double lat2){
+        return parkStatisticBiz.Distance(lng, lat, lng2, lat2);
+    }
 
 
 

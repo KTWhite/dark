@@ -9,6 +9,7 @@ import com.github.dark.mapper.ParkEntMapper;
 import com.github.dark.mapper.ParkIndustryMapper;
 import com.github.dark.mapper.ParkLngLatMapper;
 import com.github.dark.utils.StringUtils;
+import io.netty.util.internal.MathUtil;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -35,12 +36,13 @@ public class ParkStatisticBiz {
         return parkEntEntities;
     }
 
-    public List<ParkEntEntity> getEntInfoByLng(){
+    public List<ParkDataSynEntity> getEntInfoByLng(){
         Example example = new Example(ParkEntEntity.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andIsNotNull("lng");
-        List<ParkEntEntity> parkEntEntities = parkEntMapper.selectByExample(example);
-        return parkEntEntities;
+        criteria.andIsNull("yuanqu");
+        List<ParkDataSynEntity> parkDataSynEntities = parkDataSynMapper.selectByExample(example);
+        return parkDataSynEntities;
     }
 
     public ParkIndustryEntity selectByIndustry(String result){
@@ -63,7 +65,7 @@ public class ParkStatisticBiz {
     }
 
 
-    public void getDistance(String lng,String lat,ParkEntEntity parkEntEntity){
+    public void getDistance(String lng,String lat,ParkDataSynEntity parkEntEntity){
         List<ParkLngLatEntity> parkLngLatEntities = parkLngLatMapper.selectAll();
         parkLngLatEntities.stream().forEach(y->{
             String lng1 = y.getLng();
@@ -80,7 +82,12 @@ public class ParkStatisticBiz {
                 if (y.getRange()!=null&&y.getRange().length()>0){
                     Double range = parseDouble(y.getRange());
                     if (distance<range){
-                        System.out.println("该企业{"+parkEntEntity.getEntName()+"}在园区内：");
+                        parkEntEntity.setYuanqu(y.getParkName());
+                        Example example = new Example(ParkEntEntity.class);
+                        Example.Criteria criteria = example.createCriteria();
+                        criteria.andEqualTo("id",parkEntEntity.getId());
+                        parkDataSynMapper.updateByExampleSelective(parkEntEntity,example);
+                        System.out.println("更新的企业ID：{ "+parkEntEntity.getId()+"：企业名称："+parkEntEntity.getEntName()+" }的园区");
                     }else{
                         System.out.println("该企业{"+parkEntEntity.getEntName()+"}不在园区内：");
                     }
@@ -88,36 +95,55 @@ public class ParkStatisticBiz {
             }else{
                 System.out.println("该企业{"+parkEntEntity.getEntName()+"}不在园区内：");
             }
+        });
+        System.out.println("结束园区经纬度更新");
+    }
 
+
+    public void parkByAddress(ParkDataSynEntity parkDataSynEntity){
+        List<ParkLngLatEntity> parkLngLatEntities = parkLngLatMapper.selectAll();
+        parkLngLatEntities.stream().forEach(y->{
+            if (parkDataSynEntity.getEntAddress().contains(y.getParkName())){
+                parkDataSynEntity.setYuanqu(y.getParkName());
+                Example example = new Example(parkDataSynEntity.getClass());
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andEqualTo("id",parkDataSynEntity.getId());
+                System.out.println("更新的当前企业是："+parkDataSynEntity.getEntName());
+                parkDataSynMapper.updateByExampleSelective(parkDataSynEntity,example);
+            }
         });
     }
+
+
 
     /**
      *
      * @param lng1 企业纬度
      * @param lat1 企业境地
+     *             企业起点 园区终点
      * @param lng2 园区纬度
      * @param lat2 园区经度
      * @return
      */
     public Double Distance(Double lng1,Double lat1,Double lng2,Double lat2){
+        Integer radius = 6371; //km
         if (lng1!=null&&lat1!=null&&lng2!=null&&lat2!=null){
-            double radLat1  = lat1 * Math.PI / 180.0;
-            double radLat2  = lat2 * Math.PI / 180.0;
-            double a = radLat2-radLat1;
-            double radLng1 = lng1 * Math.PI / 180.0;
-            double radLng2 = lng2 * Math.PI / 180.0;
-            double b = radLng2 - radLng1;
-            double s =2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
-                    Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
-            s = s * 6378.137;
-            s = Math.round(s*10000)/10000;
-            double result = s = s / 1000;
-            return result;
+            double dLat = Math.toRadians(lat2 - lat1);
+            double dLng = Math.toRadians(lng2 - lng1);
+            double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return radius * c*1000;
         }else{
             return null;
         }
 
+    }
+
+    public Integer getParkCount(){
+        Example example = new Example(ParkEntEntity.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIsNotNull("yuanqu");
+        return parkDataSynMapper.selectCountByExample(example);
     }
     public Double parseDouble(String s){
         if (!StringUtils.isEmpty(s)){
@@ -135,6 +161,7 @@ public class ParkStatisticBiz {
         criteria.orLike("entCode",code+"%");
         criteria.orLike("entSocialNo","%"+code+"%");
         criteria.orLike("entCity",code+"%");
+        criteria.andIsNull("plate");
         List<ParkDataSynEntity> parkDataSynEntities = parkDataSynMapper.selectByExample(example);
         parkDataSynEntities.stream().forEach(x->{
             x.setPlate(plate);

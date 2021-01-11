@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 @RestController
-@Api("用户行为接口")
+@Api(tags = "用户行为接口")
 @RequestMapping("/action")
 @Slf4j
 public class ActionController {

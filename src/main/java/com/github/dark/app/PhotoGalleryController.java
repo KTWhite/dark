@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@Api("图片集接口")
+@Api(tags = "图片集接口")
 @RequestMapping("/photo")
 @Slf4j
 public class PhotoGalleryController {
