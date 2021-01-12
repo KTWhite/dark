@@ -6,7 +6,10 @@ import com.github.dark.constants.CommonMessage;
 import com.github.dark.entity.ParkDataSynEntity;
 import com.github.dark.entity.ParkEntEntity;
 import com.github.dark.entity.ParkIndustryEntity;
+import com.github.dark.utils.ExcelUtils;
 import com.github.dark.vo.request.BaseRequest;
+import com.github.dark.vo.response.FileExcelColumn;
+import com.github.dark.vo.response.getFileEntity;
 import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -70,6 +75,7 @@ public class ParkStatisticController {
     @ApiOperation("园区统计信息")
     public ResultData<Integer> getParkEnt(@RequestBody BaseRequest baseRequest){
         ResultData<Integer> resultData = new ResultData<>();
+        Integer init = parkStatisticBiz.getParkCount();
         List<ParkDataSynEntity> entInfo = parkStatisticBiz.getEntInfoByLng();
         entInfo.stream().forEach(x->{
             String lng = x.getLng();
@@ -82,7 +88,7 @@ public class ParkStatisticController {
         System.out.println("更新企业园区名称结束");
         Integer parkCount = parkStatisticBiz.getParkCount();
         resultData.setData(parkCount);
-        resultData.setMsg("当前已更新的企业的园区数量为："+parkCount);
+        resultData.setMsg("当前已更新的企业的园区数量为："+(parkCount-init));
         return resultData;
     }
 
@@ -90,13 +96,16 @@ public class ParkStatisticController {
     @ApiOperation("根据企业地址配置园区")
     public ResultData<Integer> parkByAddress(){
         ResultData<Integer> resultData= new ResultData<>();
+        Integer init = parkStatisticBiz.getParkCount();
         List<ParkDataSynEntity> entInfo = parkStatisticBiz.getEntInfoByLng();
         entInfo.stream().forEach(x->{
+            System.out.println("当前正在匹配的企业："+x.getEntName());
             parkStatisticBiz.parkByAddress(x);
         });
         Integer parkCount = parkStatisticBiz.getParkCount();
-        resultData.setData(parkCount);
-        resultData.setMsg("当前已更新的企业的园区数量为："+parkCount);
+        System.out.println("当前已更新的企业的园区数量为:"+(parkCount-init));
+        resultData.setData(parkCount-init);
+        resultData.setMsg("当前已更新的企业的园区数量为："+(parkCount-init));
         return resultData;
     }
     @RequestMapping(value = "/ign/updatePlate",method = RequestMethod.GET)
@@ -113,6 +122,36 @@ public class ParkStatisticController {
                          @RequestParam("lng2") Double lng2,
                          @RequestParam("lat2")Double lat2){
         return parkStatisticBiz.Distance(lng, lat, lng2, lat2);
+    }
+
+    @RequestMapping(value = "/ign/exportExcel",method = RequestMethod.GET)
+    @ApiOperation("导出园区存续企业数据")
+//    @PreAuthorize("@ss.hasPermi('system:projectAdmin:export')")
+    public void exportExcel(HttpServletResponse response,
+                            @RequestParam(value = "pageNum",required = false,defaultValue = "1")Integer pageNum,
+                            @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize){
+        List<getFileEntity> file = parkStatisticBiz.getFile();
+        ArrayList<FileExcelColumn> list = new ArrayList<>();
+        file.stream().forEach(x->{
+            FileExcelColumn fileExcelColumn = parkStatisticBiz.setProp(x);
+            list.add(fileExcelColumn);
+        });
+        ExcelUtils.writeExcel(response,list,FileExcelColumn.class);
+    }
+
+    @RequestMapping(value = "/ign/exportExcel2",method = RequestMethod.GET)
+    @ApiOperation("导出园区注销企业数据")
+//    @PreAuthorize("@ss.hasPermi('system:projectAdmin:export')")
+    public void exportExcel2(HttpServletResponse response,
+                            @RequestParam(value = "pageNum",required = false,defaultValue = "1")Integer pageNum,
+                            @RequestParam(value = "pageSize",required = false,defaultValue = "10")Integer pageSize){
+        List<getFileEntity> file = parkStatisticBiz.getFile2();
+        ArrayList<FileExcelColumn> list = new ArrayList<>();
+        file.stream().forEach(x->{
+            FileExcelColumn fileExcelColumn = parkStatisticBiz.setProp(x);
+            list.add(fileExcelColumn);
+        });
+        ExcelUtils.writeExcel(response,list,FileExcelColumn.class);
     }
 
 

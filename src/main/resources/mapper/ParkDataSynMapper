@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.dark.mapper.ParkDataSynMapper">
+    <select id="getFile" resultType="com.github.dark.vo.response.getFileEntity">
+            SELECT
+     yuanqu,
+     SUBSTR(ent_reg_dt,1,7) regDate,
+     COUNT(SUBSTR(ent_reg_dt,1,7)) total
+    FROM
+     `yuanqu_data_syn`
+    WHERE
+     yuanqu IS NOT NULL
+     AND SUBSTR(ent_reg_dt,1,4) = '2020'
+     AND entStatus LIKE '%存续%'
+    GROUP BY
+     yuanqu,SUBSTR(ent_reg_dt,1,7)
+    ORDER BY yuanqu desc;
+    </select>
+</mapper>

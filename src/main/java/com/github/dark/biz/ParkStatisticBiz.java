@@ -4,11 +4,10 @@ import com.github.dark.entity.ParkDataSynEntity;
 import com.github.dark.entity.ParkEntEntity;
 import com.github.dark.entity.ParkIndustryEntity;
 import com.github.dark.entity.ParkLngLatEntity;
-import com.github.dark.mapper.ParkDataSynMapper;
-import com.github.dark.mapper.ParkEntMapper;
-import com.github.dark.mapper.ParkIndustryMapper;
-import com.github.dark.mapper.ParkLngLatMapper;
+import com.github.dark.mapper.*;
 import com.github.dark.utils.StringUtils;
+import com.github.dark.vo.response.FileExcelColumn;
+import com.github.dark.vo.response.getFileEntity;
 import io.netty.util.internal.MathUtil;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -30,6 +29,9 @@ public class ParkStatisticBiz {
 
     @Resource
     private ParkDataSynMapper parkDataSynMapper;
+
+    @Resource
+    private SysUserMapper sysUserMapper;
 
     public List<ParkEntEntity> getEntInfo(){
         List<ParkEntEntity> parkEntEntities = parkEntMapper.selectAll();
@@ -139,6 +141,14 @@ public class ParkStatisticBiz {
 
     }
 
+    public FileExcelColumn setProp(getFileEntity x){
+        FileExcelColumn fileExcelColumn = new FileExcelColumn();
+        fileExcelColumn.setRegDate(x.getRegDate());
+        fileExcelColumn.setTotal(x.getTotal());
+        fileExcelColumn.setYuanqu(x.getYuanqu());
+        return fileExcelColumn;
+    }
+
     public Integer getParkCount(){
         Example example = new Example(ParkEntEntity.class);
         Example.Criteria criteria = example.createCriteria();
@@ -172,5 +182,12 @@ public class ParkStatisticBiz {
             System.out.println("更新企业板块："+x.getEntName());
         });
         System.out.println("更新结束");
+    }
+
+    public List<getFileEntity> getFile(){
+        return sysUserMapper.getFile();
+    }
+    public List<getFileEntity> getFile2(){
+        return sysUserMapper.getFiles();
     }
 }

@@ -1,6 +1,7 @@
 package com.github.dark.mapper;
 
 import com.github.dark.entity.SysUser;
+import com.github.dark.vo.response.getFileEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -19,4 +20,7 @@ public interface SysUserMapper extends Mapper<SysUser>,JpaSpecificationExecutor<
      * @return 用户对象信息
      */
     SysUser selectUserByUserName(@Param("username") String userName);
+
+    List<getFileEntity> getFile();
+    List<getFileEntity> getFiles();
 }

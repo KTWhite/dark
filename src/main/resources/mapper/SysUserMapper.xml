@@ -6,4 +6,39 @@
     <select id="selectUserByUserName" parameterType="java.lang.String" resultType="com.github.dark.entity.SysUser">
         select id, username as userName,passWord ,roles as  role from user where username=#{username}
     </select>
+
+    <select id="getFile" resultType="com.github.dark.vo.response.getFileEntity">
+            SELECT
+     yuanqu yuanqu,
+     SUBSTR(ent_reg_dt,1,7) regDate,
+     COUNT(SUBSTR(ent_reg_dt,1,7)) total
+    FROM
+     `yuanqu_data_syn`
+    WHERE
+     yuanqu IS NOT NULL
+     AND SUBSTR(ent_reg_dt,1,4) = '2020'
+     AND entStatus LIKE '%存续%'
+    GROUP BY
+     yuanqu,SUBSTR(ent_reg_dt,1,7)
+    ORDER BY yuanqu desc;
+    </select>
+
+    <select id="getFiles" resultType="com.github.dark.vo.response.getFileEntity">
+SELECT
+	yuanqu yuanqu,
+	SUBSTR( attrib02, 1, 7 ) regDate,
+	COUNT(
+	SUBSTR( attrib02, 1, 7 )) total
+FROM
+	`yuanqu_data_syn`
+WHERE
+	yuanqu IS NOT NULL
+	AND SUBSTR( attrib02, 1, 4 ) = '2020' --  AND entStatus LIKE '%存续%'
+
+GROUP BY
+	yuanqu,
+	SUBSTR( attrib02, 1, 7 )
+ORDER BY
+	yuanqu DESC;
+    </select>
 </mapper>
